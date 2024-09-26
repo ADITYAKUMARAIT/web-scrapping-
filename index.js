@@ -2,7 +2,7 @@ import { chromium } from 'playwright';
 import fs from 'fs';  
 import { createObjectCsvWriter as csvWriter } from 'csv-writer';  
 
-async function scrapeTechCrunchListing(page, url) {
+async function TechCrunchListing(page, url) {
     await page.goto(url);
     console.log(`Scraping: ${url}`);
 
@@ -23,13 +23,13 @@ async function scrapeTechCrunchListing(page, url) {
 }
 
 
-async function scrapeTechCrunchWithPagination(browser, baseUrl, numPages=1) {
+async function scrapePagination(browser, baseUrl, numPages=1) {
     const page = await browser.newPage();
     let allData = [];
 
     for (let i = 1; i <= numPages; i++) {
         const url = `${baseUrl}/page/${i}/`;
-        const pageData = await scrapeTechCrunchListing(page, url);
+        const pageData = await TechCrunchListing(page, url);
 
         if (pageData.length) {
             allData = allData.concat(pageData);
@@ -64,7 +64,7 @@ async function saveDataToCSV(data, filename = 'techcrunch_listing.csv') {
     const baseUrl = 'https://techcrunch.com';
     const numPagesToScrape = 5;  
 
-    const allArticleData = await scrapeTechCrunchWithPagination(browser, baseUrl, numPagesToScrape);
+    const allArticleData = await scrapePagination(browser, baseUrl, numPagesToScrape);
 
     if (allArticleData.length) {
         await saveDataToCSV(allArticleData);
